@@ -28,6 +28,6 @@ param (
   $downloader.DownloadFile($url, $file)
 }
 
-Download-File 'https://github.com/pakrym/android-prof/raw/index.html' 'index.html'
-Download-File 'https://github.com/pakrym/android-prof/raw/profiler.cmd' 'profiler.cmd'
-Download-File 'https://github.com/pakrym/android-prof/raw/profiler.ps1' 'profiler.ps1'
+Download-File 'http://raw.githubusercontent.com/pakrym/android-prof/master/index.html' 'index.html'
+Download-File 'http://raw.githubusercontent.com/pakrym/android-prof/master/profiler.cmd' 'profiler.cmd'
+Download-File 'http://raw.githubusercontent.com/pakrym/android-prof/master/profiler.ps1' 'profiler.ps1'
