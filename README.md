@@ -10,5 +10,5 @@ Format is:
 
 Install using:
 ```
-    @powershell -NoProfile -ExecutionPolicy unrestricted -Command "iex ((new-object net.webclient).DownloadString('https://github.com/pakrym/android-prof/raw/install.ps1'))"
+    @powershell -NoProfile -ExecutionPolicy unrestricted -Command "iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/pakrym/android-prof/master/install.ps1'))"
 ```
