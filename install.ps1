@@ -29,5 +29,7 @@ param (
 }
 
 Download-File 'https://raw.githubusercontent.com/pakrym/android-prof/master/index.html' 'index.html'
+Start-Sleep -s 5
 Download-File 'https://raw.githubusercontent.com/pakrym/android-prof/master/profiler.cmd' 'profiler.cmd'
+Start-Sleep -s 5
 Download-File 'https://raw.githubusercontent.com/pakrym/android-prof/master/profiler.ps1' 'profiler.ps1'
