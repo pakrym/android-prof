@@ -1,0 +1,112 @@
+<html>
+<head>
+    <title>Timeline demo</title>
+
+    <style type="text/css">
+        body {font: 10pt arial;}
+    </style>
+
+   <script type="text/javascript" src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization',
+       'version':'1','packages':['timeline']}]}"></script>
+
+    	<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+
+    <script type="text/javascript">
+
+
+     $(function() {
+     	$("#text").val(localStorage["text"])
+     	var myregexp = /([:\d]+) (start|finish): (\w*)( (.*))?/;
+			
+			
+
+     		$("#parse").click(function(e) {
+     			e.preventDefault();
+     			var data = [];
+
+     			   var text = $("#text").val();
+     			   localStorage["text"] = text;
+     			   var lines = text.split("\n");
+     			   for (var i = 0; i < lines.length; i++) {
+     			   	 var line = lines[i];
+
+     			   	 var match = myregexp.exec(line);
+     			   	 if (match != null) {
+     			   	 	data.push({
+     			   	 		time : parseInt(match[1]),
+     			   	 		group : match[5],
+     			   	 		mode : match[2],
+     			   	 		operation : match[3]
+     			   	 	})
+					} 
+     			   };
+
+     			   var rows = [];
+  				   for (var i = 0; i < data.length; i++) {
+  				   		var source = data[i];
+  				   		if (source.mode != "start") continue;
+
+  				   		for (var j = 0; j < data.length; j++) {
+  				   			var f = data[j];
+  				   			if (f.mode != "finish") continue;
+  				   			
+  				   			if (f.operation == source.operation && f.group == source.group)
+  				   			{
+  				   				rows.push([source.operation, source.group, new Date(source.time), new Date(f.time)])
+  				   			}
+  				   		};
+     			   }
+
+  			
+				            // Create and populate a data table.
+				            var data = new google.visualization.DataTable();
+				            data.addColumn('string', 'Term');
+				            data.addColumn('string', 'Name');
+				            data.addColumn('datetime', 'start');
+				            data.addColumn('datetime', 'end');
+
+
+                    if (rows.length == 0)
+                      return;
+				            data.addRows(rows);
+
+				            // specify options
+				            var options = {
+				            	height: "100%"
+				            };
+                    
+                    // Instantiate our timeline object.
+                    var vis = new google.visualization.Timeline(document.getElementById('mytimeline'));
+/*
+                    google.visualization.events.addListener(vis, 'onmouseover', function (obj) {
+                        var startDate = data.getValue(obj.row, 2);
+                        var endDate   = data.getValue(obj.row, 3);
+
+                        var timeDiff = Math.abs(startDate.getTime() - endDate.getTime());
+                        var diffDays = (timeDiff / (1000 * 3600 * 24)); 
+
+                        var durationEl = document.getElementById('duration');
+                        durationEl.innerHTML = 'Duration: ' + diffDays.toFixed(4);
+                    });*/
+
+				            
+				            // Draw our timeline with the created data and options
+				            vis.draw(data, options);
+				        
+				      
+     		});
+     })
+
+     
+    </script>
+</head>
+
+<body>
+<pre> Format is [timestamp] [start|finish]: [operation name] [aditional data: url/index ...]</pre>
+<textarea id="text" style="width: 100%">
+</textarea>
+<a href="#" id="parse">Parse</a>
+
+<div id="mytimeline" style="width:95%; height: 900px; margin: 10px"></div>
+</body>
+</html>
