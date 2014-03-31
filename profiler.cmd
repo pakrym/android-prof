@@ -1,1 +1,1 @@
-powershell .\profiler.ps1 -ExecutionPolicy Unrestricted 
+powershell  -ExecutionPolicy Unrestricted  .\profiler.ps1 
