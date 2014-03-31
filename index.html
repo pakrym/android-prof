@@ -15,8 +15,24 @@
 
 
      $(function() {
-     	$("#text").val(localStorage["text"])
+      $text = $("#text");
+
+     	$text.val(localStorage["text"])
      	var myregexp = /([:\d]+) (start|finish): (\w*)( (.*))?/;
+
+      function cleanup(data)
+      {
+         var lines = data.match(/[^\r\n]+/g);
+              data = "";
+              $.each(lines, function() {
+                  if (myregexp.exec(this))
+                  {
+                    data += this + "\n";
+                  }
+              });
+              return data;
+      };
+
       $("#start").click(function(e){
           $.get("/start");
       });
@@ -26,23 +42,20 @@
       });
      
      $("#clear").click(function(e){
-           $("#text").val("");
+           $text.val("");
+      });
+
+    $("#cleanup").click(function(e){
+          $text.val(cleanup($text.val()));
       });
 
       $("#load").click(function(e){
           $.get("/log").done(function(data)
             {
 
-              var lines = data.match(/[^\r\n]+/g);
-              data = "";
-              $.each(lines, function() {
-                  if (myregexp.exec(this))
-                  {
-                    data += this + "\n";
-                  }
-              });
-              var text = $("#text").val();
-              $("#text").val(text +data)
+             
+              var text = $text.val();
+              $text.val(text +data)
             });
       });
 
@@ -50,7 +63,7 @@
      			e.preventDefault();
      			var data = [];
 
-     			   var text = $("#text").val();
+     			   var text = $text.val();
      			   localStorage["text"] = text;
      			   var lines = text.split("\n");
      			   for (var i = 0; i < lines.length; i++) {
@@ -138,6 +151,7 @@
 <a href="#" id="start">Start log</a>
 <a href="#" id="stop">Stop log</a>
 <a href="#" id="clear">Clear</a>
+<a href="#" id="cleanup">Cleanup</a>
 
 <div id="mytimeline" style="width:95%; height: 900px; margin: 10px"></div>
 </body>
