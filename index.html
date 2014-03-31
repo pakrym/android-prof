@@ -33,6 +33,14 @@
           $.get("/log").done(function(data)
             {
 
+              var lines = data.match(/[^\r\n]+/g);
+              data = "";
+              $.each(lines, function() {
+                  if (myregexp.exec(this))
+                  {
+                    data += this + "\n";
+                  }
+              });
               var text = $("#text").val();
               $("#text").val(text +data)
             });
@@ -71,6 +79,7 @@
   				   			if (f.operation == source.operation && f.group == source.group)
   				   			{
   				   				rows.push([source.operation, source.group, new Date(source.time), new Date(f.time)])
+                    f.mode = "done"
                     break;
   				   			}
   				   		};
