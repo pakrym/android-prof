@@ -182,7 +182,9 @@ profiler = {
 		      var options = {
 		        legend: { position: 'top', maxLines: 3 },
 				bar: { groupWidth: '75%' },
-		        isStacked: true,height: 800
+		        isStacked: true,height: 800,
+		        theme: "maximized",
+		        hAxis: {textPosition: 'none'}
 		      };
 	      var chart = new google.visualization.ColumnChart(document.getElementById('mytimeline'));
 		  chart.draw(data, options);
