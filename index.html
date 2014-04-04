@@ -18,54 +18,55 @@
 
      $text.val(localStorage["text"]);
      	
-     	$('input[type="radio"]').change(function() {
-     		var mode = $('input[type="radio"]:checked').val();
-     		currentMode = profiler[mode];
-     	});
+	      $('input[type="radio"]').change(function() {
+	      	var mode = $('input[type="radio"]:checked').val();
+	      	currentMode = profiler[mode];
+	      });
 
-      $("#start").click(function(e){
-          $.get("/start");
-      });
+	      $("#start").click(function(e){
+	          $.get("/start");
+	      });
 
-      $("#stop").click(function(e){
-          $.get("/stop");
-      });
-     
-     $("#clear").click(function(e){
-           $text.val("");
-      });
+	      $("#stop").click(function(e){
+	          $.get("/stop");
+	      });
+	     
+	     $("#clear").click(function(e){
+	           $text.val("");
+	      });
 
-    $("#cleanup").click(function(e){
-          $text.val(currentMode.cleanup($text.val()));
-      });
+	     $("#cleanup").click(function(e){
+	          $text.val(currentMode.cleanup($text.val()));
+	      });
 
-      $("#load").click(function(e){
-          $.get("/log").done(function(data)
-            {
-              var text = $text.val();
-              $text.val(text +data)
-            });
-      });
+	      $("#load").click(function(e){
+	          $.get("/log").done(function(data)
+	            {
+	              var text = $text.val();
+	              $text.val(text +data)
+	            });
+	      });
+	 	
+	 	$("#load_file").click(function(e){
+	          $.get("/file").done(function(data)
+	            {
+	              var text = $text.val();
+	              $text.val(text + currentMode.cleanup(data))
+	            });
+	      });
+		$("#parse").click(function(e) {
+			e.preventDefault();
+			var text = $text.val();
+			localStorage["text"] = text;
+			currentMode.parse(text);
+		});
 
-     		$("#parse").click(function(e) {
-     			e.preventDefault();
-     			var text = $text.val();
-     			localStorage["text"] = text;
-     			currentMode.parse(text);
-
-				      
-     		});
-
-
-
-     		$("#parse_memory").click(function(e) {
-     			e.preventDefault();
-     			var text = $text.val();
-     			localStorage["text"] = text;
-				currentMode.parse(text);
-     			   				        
-				      
-     		});
+		$("#parse_memory").click(function(e) {
+			e.preventDefault();
+			var text = $text.val();
+			localStorage["text"] = text;
+			currentMode.parse(text);
+		});
      })
 
      
@@ -90,8 +91,10 @@
       			<input type="radio" name="mode" value="memory">Memory</input>
       		</li>
           <li><a href="#" class="pure-button" id="parse">Parse</a></li>
-          
-          <li><a href="#" class="pure-button" id="load">Load</a></li>
+          <li><a href="#" class="pure-button" id="load_file">Load file.log</a></li>
+
+          <li><a href="#" class="pure-button" id="load">Load output</a></li>
+
           <li><a href="#" class="pure-button" id="start">Start log</a></li>
           <li><a href="#" class="pure-button" id="stop">Stop log</a></li>
           <li><a href="#" class="pure-button" id="clear">Clear</a></li>

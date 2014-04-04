@@ -5,7 +5,7 @@ profiler = {
 			  var lines = data.match(/[^\r\n]+/g);
               data = "";
               $.each(lines, function() {
-                  if (regexp.exec(this))
+                  if (regex.exec(this))
                   {
                     data += this + "\n";
                   }
@@ -17,7 +17,7 @@ profiler = {
 		regex: /([:\d]+) (start|finish): (\w*)( (.*))?/,
 
 		cleanup: function(data) {
-			 return profiler.common.cleanup(profiler.timings.regex);
+			 return profiler.common.cleanup(data,profiler.timings.regex);
 		},
 		parse: function(text){
 				var lines = text.split("\n");
@@ -99,7 +99,7 @@ profiler = {
 		processRegex: /([\w\d.]+) \(pid (\d+)\) is using (\d+) kB from (\d+) kB/,
 
 		cleanup: function(data) {
-			 return profiler.common.cleanup(profiler.timings.regex);
+			 return profiler.common.cleanup( data,profiler.memory.regex);
 		},
 
 		parse: function(text){
