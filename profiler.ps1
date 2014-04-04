@@ -4,6 +4,7 @@ $global:job = $null
 
 $routes = @{
     "/" = { return [System.IO.File]::ReadAllText("index.html") }
+    "/js" = { return [System.IO.File]::ReadAllText("profiler.js") }
     "/start" = {
         Write-Host "Starting job"
         $global:job = Start-Job -scriptblock {

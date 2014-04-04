@@ -1,37 +1,28 @@
 <html>
 <head>
-    <title>Timeline demo</title>
+   <title>Timeline demo</title>
 
-    <style type="text/css">
-        body {font: 10pt arial;}
-    </style>
-
+   <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.4.2/pure-min.css">
    <script type="text/javascript" src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization',
-       'version':'1','packages':['timeline']}]}"></script>
+       'version':'1','packages':['timeline','corechart']}]}"></script>
 
-    	<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+   <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+   <script src="/js" type="text/javascript" ></script>
 
-    <script type="text/javascript">
-
+   <script type="text/javascript">
 
      $(function() {
+     	var currentMode = profiler.timings;
+
       $text = $("#text");
 
-     	$text.val(localStorage["text"])
-     	var myregexp = /([:\d]+) (start|finish): (\w*)( (.*))?/;
-
-      function cleanup(data)
-      {
-         var lines = data.match(/[^\r\n]+/g);
-              data = "";
-              $.each(lines, function() {
-                  if (myregexp.exec(this))
-                  {
-                    data += this + "\n";
-                  }
-              });
-              return data;
-      };
+     $text.val(localStorage["text"]);
+     	
+     	$('input[type="radio"]').change(function() {
+     		var mode = $('input[type="radio"]:checked').val();
+     		alert(mode);
+     		currentMode = profiler[mode];
+     	});
 
       $("#start").click(function(e){
           $.get("/start");
@@ -46,14 +37,12 @@
       });
 
     $("#cleanup").click(function(e){
-          $text.val(cleanup($text.val()));
+          $text.val(currentMode.cleanup($text.val()));
       });
 
       $("#load").click(function(e){
           $.get("/log").done(function(data)
             {
-
-             
               var text = $text.val();
               $text.val(text +data)
             });
@@ -61,98 +50,54 @@
 
      		$("#parse").click(function(e) {
      			e.preventDefault();
-     			var data = [];
+     			var text = $text.val();
+     			localStorage["text"] = text;
+     			currentMode.parse(text);
 
-     			   var text = $text.val();
-     			   localStorage["text"] = text;
-     			   var lines = text.split("\n");
-     			   for (var i = 0; i < lines.length; i++) {
-     			   	 var line = lines[i];
-
-     			   	 var match = myregexp.exec(line);
-     			   	 if (match != null) {
-     			   	 	data.push({
-     			   	 		time : parseInt(match[1]),
-     			   	 		group : match[5],
-     			   	 		mode : match[2],
-     			   	 		operation : match[3]
-     			   	 	})
-					} 
-     			   };
-
-     			   var rows = [];
-  				   for (var i = 0; i < data.length; i++) {
-  				   		var source = data[i];
-  				   		if (source.mode != "start") continue;
-
-  				   		for (var j = 0; j < data.length; j++) {
-  				   			var f = data[j];
-  				   			if (f.mode != "finish") continue;
-  				   			
-  				   			if (f.operation == source.operation && f.group == source.group)
-  				   			{
-  				   				rows.push([source.operation, source.group, new Date(source.time), new Date(f.time)])
-                    f.mode = "done"
-                    break;
-  				   			}
-  				   		};
-     			   }
-
-  			
-				            // Create and populate a data table.
-				            var data = new google.visualization.DataTable();
-				            data.addColumn('string', 'Term');
-				            data.addColumn('string', 'Name');
-				            data.addColumn('datetime', 'start');
-				            data.addColumn('datetime', 'end');
+				      
+     		});
 
 
-                    if (rows.length == 0)
-                      return;
-				            data.addRows(rows);
 
-				            // specify options
-				            var options = {
-				            	height: "100%"
-				            };
-                    
-                    // Instantiate our timeline object.
-                    var vis = new google.visualization.Timeline(document.getElementById('mytimeline'));
-/*
-                    google.visualization.events.addListener(vis, 'onmouseover', function (obj) {
-                        var startDate = data.getValue(obj.row, 2);
-                        var endDate   = data.getValue(obj.row, 3);
-
-                        var timeDiff = Math.abs(startDate.getTime() - endDate.getTime());
-                        var diffDays = (timeDiff / (1000 * 3600 * 24)); 
-
-                        var durationEl = document.getElementById('duration');
-                        durationEl.innerHTML = 'Duration: ' + diffDays.toFixed(4);
-                    });*/
-
-				            
-				            // Draw our timeline with the created data and options
-				            vis.draw(data, options);
-				        
+     		$("#parse_memory").click(function(e) {
+     			e.preventDefault();
+     			var text = $text.val();
+     			localStorage["text"] = text;
+				currentMode.parse(text);
+     			   				        
 				      
      		});
      })
+
+     
+
 
      
     </script>
 </head>
 
 <body>
-<pre> Format is [timestamp] [start|finish]: [operation name] [aditional data: url/index ...]</pre>
-<textarea id="text" style="width: 100%; height: 500px">
-</textarea>
-<a href="#" id="parse">Parse</a>
-<a href="#" id="load">Load</a>
-<a href="#" id="start">Start log</a>
-<a href="#" id="stop">Stop log</a>
-<a href="#" id="clear">Clear</a>
-<a href="#" id="cleanup">Cleanup</a>
 
-<div id="mytimeline" style="width:95%; height: 900px; margin: 10px"></div>
+      <pre> Format is [timestamp] [start|finish]: [operation name] [aditional data: url/index ...]</pre>
+      <form class="pure-form pure-input-1">
+        <textarea id="text" style="width: 100%; height: 500px" spellcheck="false">
+        </textarea>
+      </form>
+       
+      <div class="pure-menu pure-menu-open pure-menu-horizontal">
+      <ul>
+      		<li>Mode: 
+      			<input type="radio" name="mode" value="timings" checked="">Timings</input>
+      			<input type="radio" name="mode" value="memory">Memory</input>
+      		</li>
+          <li><a href="#" class="pure-button" id="parse">Parse</a></li>
+          
+          <li><a href="#" class="pure-button" id="load">Load</a></li>
+          <li><a href="#" class="pure-button" id="start">Start log</a></li>
+          <li><a href="#" class="pure-button" id="stop">Stop log</a></li>
+          <li><a href="#" class="pure-button" id="clear">Clear</a></li>
+          <li><a href="#" class="pure-button" id="cleanup">Cleanup</a></li>
+      </ul>
+      <div id="mytimeline" class="pure-u-1-1" style="width:95%;  margin: 10px"></div>
 </body>
 </html>
