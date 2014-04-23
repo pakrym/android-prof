@@ -2,13 +2,52 @@
 <head>
    <title>Timeline demo</title>
 
-   <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.4.2/pure-min.css">
    <script type="text/javascript" src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization',
        'version':'1','packages':['timeline','corechart']}]}"></script>
 
    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
    <script src="/js" type="text/javascript" ></script>
 
+   <style type="text/css">
+   .toolbar
+   {
+   		font-family: monospace;
+	   	list-style: none;
+	   	display: inline-block;
+	   	line-height: 25px;
+   }
+	.toolbar li
+	{
+		display: inline-block;;
+   		float: left;
+	}
+	
+   .toolbar a
+   {
+   		text-decoration: none;
+
+   		border: 1px solid black;
+   		margin: 2px 5px;
+   		color: black;
+   		padding: 2px;
+   }
+
+     .toolbar a:hover
+   {
+   		background: #cccccc;
+
+   }
+input[type=checkbox], input[type=radio] {
+    vertical-align: middle;
+    position: relative;
+    bottom: 1px;
+}
+input[type=radio] {
+    bottom: 2px;
+}
+
+
+   </style>
    <script type="text/javascript">
 
      $(function() {
@@ -84,22 +123,26 @@
         </textarea>
       </form>
        
-      <div class="pure-menu pure-menu-open pure-menu-horizontal">
-      <ul>
-      		<li>Mode: 
-      			<input type="radio" name="mode" value="timings" checked="">Timings</input>
-      			<input type="radio" name="mode" value="memory">Memory</input>
+      
+      <ul class="toolbar">
+      		<li>Mode: </li>
+      			<li> <label>
+      			 	<input type="radio" name="mode" value="timings" checked=""/>Timings
+      			 </label></li>
+      			<li><label>
+      				<input type="radio" name="mode" value="memory"/>Memory</label></li>
       		</li>
-          <li><a href="#" class="pure-button" id="parse">Parse</a></li>
-          <li><a href="#" class="pure-button" id="load_file">Load file.log</a></li>
+          <li><a href="#" id="parse">Parse</a></li>
+          <li><a href="#" id="load_file">Load file.log</a></li>
 
-          <li><a href="#" class="pure-button" id="load">Load output</a></li>
+          <li><a href="#" id="load">Load output</a></li>
 
-          <li><a href="#" class="pure-button" id="start">Start log</a></li>
-          <li><a href="#" class="pure-button" id="stop">Stop log</a></li>
-          <li><a href="#" class="pure-button" id="clear">Clear</a></li>
-          <li><a href="#" class="pure-button" id="cleanup">Cleanup</a></li>
+          <li><a href="#" id="start">Start log</a></li>
+          <li><a href="#" id="stop">Stop log</a></li>
+          <li><a href="#" id="clear">Clear</a></li>
+          <li><a href="#" id="cleanup">Cleanup</a></li>
       </ul>
-      <div id="mytimeline" class="pure-u-1-1" style="width:95%;  margin: 10px"></div>
+      
+      <div id="mytimeline"  style="width:97%; height: 800px; margin: 10px"></div>
 </body>
 </html>

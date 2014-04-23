@@ -30,7 +30,7 @@ profiler = {
      			   	 if (match != null) {
      			   	 	data.push({
      			   	 		time : parseInt(match[1]),
-     			   	 		group : match[5],
+     			   	 		group : match[5] || '',
      			   	 		mode : match[2],
      			   	 		operation : match[3]
      			   	 	})
@@ -70,7 +70,7 @@ profiler = {
 
 	            // specify options
 	            var options = {
-	            	height: "100%"
+	            	width: "100%"
 	            };
                     
                     // Instantiate our timeline object.
