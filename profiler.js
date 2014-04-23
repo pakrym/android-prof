@@ -20,6 +20,7 @@ profiler = {
 			 return profiler.common.cleanup(data,profiler.timings.regex);
 		},
 		parse: function(text){
+				var data = [];
 				var lines = text.split("\n");
      			// parse rows
      			for (var i = 0; i < lines.length; i++) {
